@@ -1,0 +1,575 @@
+openapi: 3.0.1
+info:
+  description: 
+    Falcon API routes. Endpoints are not final. Some models are incomplete.
+  version: '1.0'
+  title: Falcon API
+paths:
+  # --- Address ---
+  /api/address:
+    post:
+      tags:
+        - address
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewAddressRequest'
+              
+      responses:
+        '200':
+          description: OK
+  # --- Auth ---
+  /api/auth/login:
+    post:
+      tags:
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+              
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+               
+          
+  /api/auth/logout:
+    post:
+      tags:
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyParams'
+              
+      responses:
+        '200':
+          description: OK
+          
+  /api/auth/signup:
+    post:
+      tags:
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignupResponse'
+           
+  # --- Bank Account ----
+  /api/business/ach/cancel/{transactionId}:
+    post:
+      tags:
+        - bankAccount
+      description:
+        cancel ach
+      parameters:
+        - in: path
+          name: transactionId
+          required: true
+          schema:
+            properties:
+              transactionId:
+                type: number
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyParams'
+    
+  /api/business/ach:
+    post:
+      tags:
+        - bankAccount
+      description:
+        create ach
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankAccountRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccountResponse'
+                
+  /api/business/transactions:
+    get:
+      tags:
+        - bankAccount
+      description: get transaction
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyParams'
+  /api/business/cards:
+    get:
+      tags:
+        - bankAccount
+      description: TODO
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardsResponse'
+  
+  # --- BBA --- 
+  # TODO
+  
+  # --- Card ---
+  /api/card/activate:
+    post:
+      tags:
+        - card
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivateRequest'
+      responses:
+        '200':
+          description: OK
+  
+  /api/card/pin:
+    put:
+      tags:
+        - card
+      description:
+        change pin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PinRequest'
+      responses:
+        '200':
+          description: OK
+  
+  /api/card/replacement:
+    post:
+      tags:
+        - card
+      description:
+        replace card
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReplacementRequest'
+      responses:
+        '200':
+          description: OK
+    
+  /api/card/update-status:
+    put:
+      tags:
+        - card
+      description:
+        update card status
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStatusRequest'
+      responses:
+        '202':
+          description: ACCEPTED
+          
+  # --- Customer ---
+  /api/customer/profile:
+    get:
+      tags:
+        - customer
+      description:
+        get user and business info
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileResponse'
+              
+  
+  /api/customer/identity:
+    post:
+      tags:
+        - customer
+      description:
+        persona identity verification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentityRequest'
+      responses:
+        '200':
+          description: OK
+          
+  /api/customer/email/verification/resend:
+    post:
+      tags:
+        - customer
+      description:
+        resend email verification TODO
+      requestBody:
+        content:
+          application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyParams'
+      responses:
+        '200':
+          description: OK
+  
+  # Plaid
+  /api/plaid/link-token:
+    post:
+      tags:
+        - plaid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkTokenRequest'
+      responses:
+        '200':
+          description: OK
+          
+  # --- externalAccount ---
+  /api/business/external-accounts:
+    post:
+      tags:
+        - externalAccount
+      description:
+        create external account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExternalAccountRequest'
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/ExternalAccountResponse'
+                 
+  /api/business/plaid:
+    post:
+      tags:
+        - externalAccount
+      description:
+        create external account from plaid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExternalAccountRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/ExternalAccountPlaidRequest'
+                 
+  /api/business/{externalBankAccountId}:
+    delete:
+      tags:
+        - externalAccount
+      description:
+        delete external bank account
+      parameters:
+        - in: path
+          name: externalBankAccountId
+          required: true
+          schema:
+            properties:
+              externalBankAccountId:
+                type: number
+      responses:
+        '200':
+          description: OK
+    
+  
+# --- Models ---
+components:
+  schemas:
+    EmptyParams:
+      type: object
+    NewAddressRequest:
+      required: [line1, city, state, zipCode]
+      properties:
+        line1: 
+          type: string
+        line2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zipCode:
+          type: string
+    LoginRequest:
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    LoginResponse:
+       properties:
+        useLegacySystem:
+          type: boolean
+    SignupRequest:
+      properties:
+        email: 
+          type: string
+        password:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+    SignupResponse:
+      properties:
+        TODO: 
+          description: todo
+    BankAccountRequest:
+      properties:
+        amountCents:
+          type: number
+        externalBankAccountId:
+          type: string
+        transferType:
+          type: string
+          enum: ['CREDIT', 'DEBIT']
+        idempotencyKey: 
+          type: string
+    BankAccountResponse:
+      properties:
+        transactionId:
+          type: string
+    TransactionRequest:
+      properties:
+        includeEvents:
+          type: boolean
+        sortDirection:
+          type: string
+          enum: ['DESC', 'ASC']
+        limit:
+          type: number
+        offset: 
+          type: number
+    CardsResponse:
+      properties:
+        cardId: 
+          type: string
+        bankAccountId: 
+          type: string
+        customerId: 
+          type: string
+        type: 
+          type: string
+          enum: ['DIGITAL', 'DIGITAL_PHYSICAL', 'PHYSICAL']
+        primaryAccountNumberMasked: 
+          type: string
+        status: 
+          type: string
+          enum: ['ACTIVE', 'PENDING_ACTIVATION', 'SUSPENDED', 'LOST_STOLEN', 'CLOSED']
+        cardOrderId:
+          type: string
+        expirationDateMonth:
+          type: string
+        expirationDateYear:
+          type: string
+    ActivateRequest:
+      properties:
+        expirationDate:
+          properties:
+            mm:
+              type: string
+            yy:
+              type: string
+        cardLastFour:
+          type: string
+    PinRequest:
+      properties:
+        pin: 
+          type: string
+    ReplacementRequest:
+      properties:
+        idempotentId: 
+          type: string
+        cardStockId: 
+          type: string
+        imageId: 
+          type: string
+        reason: 
+          type: string
+          enum: ['INITIAL_ORDER', 'DAMAGED', 'LOST_STOLEN']
+        shippingAddressId: 
+          type: string
+    UpdateStatusRequest:
+      properties:
+        status: 
+          type: string
+          enum: ['ACTIVE', 'PENDING_ACTIVATION', 'SUSPENDED', 'LOST_STOLEN', 'CLOSED']
+    IdentityRequest:
+      properties:
+        personaInquiryId: 
+          type: string
+    LinkTokenRequest:
+      properties:
+        clientName: 
+          type: string
+        androidPackageName: 
+          type: string
+        redirectUri:
+          type: string
+        accountId: 
+          type: string
+    CustomerBody:
+      properties:
+        firstName: 
+          type: string
+        lastName: 
+          type: string
+        email: 
+          type: string
+        emailVerified: 
+          type: boolean
+        phoneVerified:
+          type: boolean
+        kycCompliant:
+          type: boolean
+    BusinessBody:
+      properties:
+        businessId: 
+          type: string
+        creatorId: 
+          type: string
+        ein: 
+          type: string
+        legalStructure: 
+          type: string
+        legalName:
+          type: string
+        dba: 
+          type: string
+        description: 
+          type: string
+        industryType: 
+          type: string
+        industryTypeOther: 
+          type: string
+        dateIncorporated: 
+          type: string 
+        stateOfIncorporation: 
+          type: string
+        addressId: 
+          type: string
+        employeeCountMin: 
+          type: number
+        employeeCountMax:
+          type: number
+        createdAt: 
+          type: string
+        updatedAt: 
+          type: string
+    ProductBody:
+      properties:
+        productId:
+          type: string
+        type: 
+          type: string
+          enum: ['BBA']
+        activeStatus: 
+          type: string
+          enum: ['INITIATED', 'ACTIVE', 'INACTIVE', 'TERMINATED']
+        lifecycleStatus:
+          type: string
+          enum: ['APPLICATION_IN_PROGRESS', 'AGREEMENT_ISSUED', 'ACCOUNT_CREATED', 'EOL']
+    ProfileResponse:
+      properties:
+        customer:
+          $ref: '#/components/schemas/CustomerBody'
+        businesses:
+          type: array
+          items:
+            properties:
+              data:
+                $ref: '#/components/schemas/BusinessBody'
+              products:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductBody'
+              roles:
+                type: array
+                items:
+                  type: string
+    ExternalAccountRequest:
+      properties:
+        routingNumber: 
+          type: string
+        accountNumber: 
+          type: string
+    ExternalAccountResponse:
+      properties:
+        externalBankAccountId: 
+          type: string
+          
+    PlaidLinkAccount:
+      required: [id, name, type, subtype]
+      properties:
+        id: 
+          type: string
+        name: 
+          type: string
+        mask: 
+          type: string
+        type: 
+          type: string
+          enum: ['credit', 'depository', 'loan', 'brokerage', 'other']
+        subtype:
+          type: string
+        verificationStatus: 
+          type: string
+    ExternalAccountPlaidRequest:
+      properties:
+        publicToken: 
+          type: string
+        institutionName:
+          type: string
+        institutionId: 
+          type: string
+        accounts: 
+          type: array
+          items:
+            $ref: '#/components/schemas/PlaidLinkAccount'
+      
+    
